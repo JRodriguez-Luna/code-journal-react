@@ -158,6 +158,11 @@ $confirmModal.addEventListener('click', () => {
     throw new Error('$modal is null');
   }
 
+  const $liToRemove = findLi(data.editing.entryId);
+  if ($liToRemove) {
+    $liToRemove.remove();
+  }
+
   removeEntryObject(data.editing.entryId);
   findLi(data.editing.entryId)?.remove();
   $modal.close();
@@ -174,7 +179,6 @@ function findEntryObject(entryId: number): Entry | null {
       return data.entries[i];
     }
   }
-  return null;
 }
 
 function removeEntryObject(entryId: number): void {
@@ -215,13 +219,15 @@ function updateEntries(formEntry: Entry): void {
   data.entries = newEntries;
 }
 
-function findLi(entryId: number): HTMLLIElement | void {
+function findLi(entryId: number): HTMLLIElement | null {
   const $lis = document.querySelectorAll('li');
-  for (const li of $lis) {
+  for (let i = 0; i < $lis.length; i++) {
+    const li = $lis[i];
     if (Number(li.getAttribute('data-entry-id')) === entryId) {
       return li;
     }
   }
+  return null;
 }
 
 function resetForm(): void {
