@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Product } from '../lib/data';
 import { readCode } from '../lib';
+import './CodeJournal.css';
 
 export function CodeJournal() {
   const [items, setItems] = useState<Product[]>([]);
@@ -34,30 +35,12 @@ export function CodeJournal() {
   }
 
   return (
-    <div
-      className="container"
-      style={{
-        minHeight: '100vh',
-        backgroundColor: 'white',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-      }}>
-      <h1
-        style={{ color: 'black', marginLeft: '-450px', marginBottom: '10px' }}>
-        New Entry
-      </h1>
+    <div className="new-entry column-full">
+      <h1>New Entry</h1>
 
-      <div
-        className="full"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginTop: '10px',
-        }}>
+      <div className="container">
         {items?.map((item) => (
-          <div key={item.entryId}>
+          <div className="item-container" key={item.entryId}>
             <ItemCard item={item} />
           </div>
         ))}
@@ -88,121 +71,48 @@ function ItemCard({ item }: CardProps) {
   };
 
   return (
-    <div
-      style={{
-        paddingBottom: '25px',
-        paddingLeft: '25px',
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-      }}>
-      <div
-        className="image-catalog"
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '25px',
-          width: '100%',
-        }}>
-        <img
-          src={photoUrl || 'placeholder-image-square.jpg'}
-          alt={item.title}
-          style={{ width: '400px', height: '400px', paddingTop: '20px' }}
-        />
+    <>
+      <div className="row">
+        <div className="column-half">
+          <img
+            src={photoUrl || 'placeholder-image-square.jpg'}
+            alt={item.title}
+          />
+        </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-          }}>
-          <p style={{ color: 'black', fontSize: '20px', marginBottom: '-2px' }}>
-            {item.title}
-          </p>
-
+        <div className="column-one-fourth">
+          <p>{item.title}</p>
           <input
             type="text"
             value={title}
             onChange={handleTitleChange}
             placeholder=""
-            style={{
-              backgroundColor: 'white',
-              border: '1px solid black',
-              color: 'black',
-              fontSize: '18px',
-              marginTop: '10px',
-              width: '100%',
-            }}
           />
 
-          <p
-            style={{
-              color: 'black',
-              fontSize: '20px',
-              marginTop: '50px',
-              width: '300px',
-              marginBottom: '-2px',
-            }}>
-            {item.photoUrl}
-          </p>
-
+          <p>{item.photoUrl}</p>
           <input
             type="text"
             value={photoUrl}
             onChange={handlePhotoUrlChange}
             placeholder=" "
-            style={{
-              backgroundColor: 'white',
-              border: '1px solid black',
-              color: 'black',
-              fontSize: '18px',
-              marginTop: '10px',
-              width: '100%',
-            }}
           />
         </div>
       </div>
 
-      <div style={{ marginTop: '-20px' }}>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '20px',
-            marginTop: '35px',
-            width: '300px',
-            marginBottom: '-1px',
-          }}>
-          {item.notes}
-        </p>
+      <div className="row">
+        <div className="column-full">
+          <p>{item.notes}</p>
 
-        <input
-          type="text"
-          value={note}
-          onChange={handleNoteChange}
-          placeholder=""
-          style={{
-            backgroundColor: 'white',
-            border: '1px solid black',
-            color: 'black',
-            paddingBottom: '100px',
-            fontSize: '18px',
-            marginTop: '10px',
-            width: '100%',
-          }}
-        />
+          <input
+            type="text"
+            value={note}
+            onChange={handleNoteChange}
+            placeholder=""
+          />
+        </div>
       </div>
 
-      <button
-        style={{
-          backgroundColor: '#572C81ff',
-          color: 'white',
-          fontSize: '16px',
-          cursor: 'pointer',
-          marginTop: '20px',
-          marginRight: '650px',
-        }}>
-        Save
-      </button>
-    </div>
+      <button>Save</button>
+    </>
   );
 }
