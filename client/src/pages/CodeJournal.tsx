@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Product } from '../lib/data';
 import { readCode } from '../lib';
-import './CodeJournal.css';
 
 export function CodeJournal() {
   const [items, setItems] = useState<Product[]>([]);
@@ -35,84 +34,61 @@ export function CodeJournal() {
   }
 
   return (
-    <div className="new-entry column-full">
-      <h1>New Entry</h1>
-
-      <div className="container">
-        {items?.map((item) => (
-          <div className="item-container" key={item.entryId}>
-            <ItemCard item={item} />
-          </div>
-        ))}
+    <main className="w-full p-5 px-72">
+      <div className="text-2xl pb-5 font-semibold">
+        <h2>New Entry</h2>
       </div>
-    </div>
-  );
-}
 
-type CardProps = {
-  item: Product;
-};
-
-function ItemCard({ item }: CardProps) {
-  const [note, setNote] = useState('');
-  const [title, setTitle] = useState('');
-  const [photoUrl, setPhotoUrl] = useState('');
-
-  const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNote(e.target.value);
-  };
-
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const handlePhotoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhotoUrl(e.target.value);
-  };
-
-  return (
-    <>
-      <div className="row">
-        <div className="column-half">
+      {/* Body Main */}
+      {/* row */}
+      <div className="w-full h-auto flex flex-wrap pb-3">
+        {/* column - Image Display*/}
+        <div className="w-1/2">
           <img
-            src={photoUrl || 'placeholder-image-square.jpg'}
-            alt={item.title}
+            src="/placeholder-image-square.jpg"
+            alt="placeholder"
+            className="w-full h-full object-cover"
           />
         </div>
 
-        <div className="column-one-fourth">
-          <p>{item.title}</p>
+        {/* column - Title & Photo Input Section */}
+        <div className="w-1/2 flex flex-col pl-5 pt-5 space-y-5">
+          <label htmlFor="title">Title</label>
           <input
+            id="title"
             type="text"
-            value={title}
-            onChange={handleTitleChange}
-            placeholder=""
+            name="title"
+            className="border p-1"
+            required
           />
-
-          <p>{item.photoUrl}</p>
+          <label htmlFor="photo-url">Photo URL</label>
           <input
-            type="text"
-            value={photoUrl}
-            onChange={handlePhotoUrlChange}
-            placeholder=" "
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="column-full">
-          <p>{item.notes}</p>
-
-          <input
-            type="text"
-            value={note}
-            onChange={handleNoteChange}
-            placeholder=""
+            id="photo-url"
+            type="url"
+            name="photoUrl"
+            className="border p-1"
+            required
           />
         </div>
       </div>
 
-      <button>Save</button>
-    </>
+      {/* column - Notes Section */}
+      <div className="w-full">
+        <label htmlFor="notes">Notes</label>
+        <textarea
+          name="notes"
+          id="notes"
+          className="w-full h-24 p-1 border"
+          required></textarea>
+      </div>
+
+      <div className="w-full flex flex-row-reverse justify-between">
+        <button className="bg-violet-500 px-5 py-1 rounded text-white">
+          SAVE
+        </button>
+        {/* Delete Button Hidden until user clicks Pencil for edit. */}
+        <button className="text-red-600 hidden">Delete Entry</button>
+      </div>
+    </main>
   );
 }
