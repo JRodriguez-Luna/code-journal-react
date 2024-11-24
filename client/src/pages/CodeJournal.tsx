@@ -1,37 +1,27 @@
-import { useEffect, useState } from 'react';
-import { Product } from '../lib/data';
-import { readCode } from '../lib';
+import { useEffect, useState, useRef } from 'react';
 
-export function CodeJournal() {
-  const [items, setItems] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<unknown>();
+type Entry = {
+  onSave: (entry: { title: string; photoURL: string; notes: string }) => void;
+};
+
+export function CodeJournal({ onSave }: Entry) {
+  const [photoURL, setPhotoURL] = useState('');
+  const [title, setTitle] = useState('');
+  const [notes, setNotes] = useState('');
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const handleSave = () => {
+    onSave({ title, photoURL, notes });
+    setTitle('');
+    setPhotoURL('');
+    setNotes('');
+  };
 
   useEffect(() => {
-    async function loadItems() {
-      try {
-        const values = await readCode();
-        setItems(values);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
+    if (imgRef.current) {
+      imgRef.current.src = photoURL;
     }
-    loadItems();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div>
-        Error! {error instanceof Error ? error.message : 'Unknown Error'}
-      </div>
-    );
-  }
+  }, [photoURL, imgRef.current]);
 
   return (
     <main className="w-full p-5 px-72">
@@ -42,10 +32,10 @@ export function CodeJournal() {
       {/* Body Main */}
       {/* row */}
       <div className="w-full h-auto flex flex-wrap pb-3">
-        {/* column - Image Display*/}
+        {/* column - Image Display */}
         <div className="w-1/2">
           <img
-            src="/placeholder-image-square.jpg"
+            src={photoURL || '/placeholder-image-square.jpg'}
             alt="placeholder"
             className="w-full h-full object-cover"
           />
@@ -60,14 +50,18 @@ export function CodeJournal() {
             name="title"
             className="border p-1"
             required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <label htmlFor="photo-url">Photo URL</label>
           <input
-            id="photo-url"
+            id="photo"
             type="url"
             name="photoUrl"
             className="border p-1"
             required
+            value={photoURL}
+            onChange={(e) => setPhotoURL(e.target.value)}
           />
         </div>
       </div>
@@ -79,10 +73,14 @@ export function CodeJournal() {
           name="notes"
           id="notes"
           className="w-full h-24 p-1 border"
-          required></textarea>
+          required
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}></textarea>
       </div>
 
-      <div className="w-full flex flex-row-reverse justify-between">
+      <div
+        className="w-full flex flex-row-reverse justify-between"
+        onClick={handleSave}>
         <button className="bg-violet-500 px-5 py-1 rounded text-white">
           SAVE
         </button>

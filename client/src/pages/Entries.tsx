@@ -1,12 +1,23 @@
 import { FaPencil } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 
 export function Entries() {
+  const navigate = useNavigate();
+
+  const handleNewEntry = () => {
+    navigate('/new-entry');
+  };
+
   return (
     <div className="w-full p-5 px-72">
       {/* Entry title and NEW Button */}
       <div className="pb-5 flex justify-between">
         <h1 className="text-2xl font-semibold">Entry</h1>
-        <button className="bg-violet-500 px-5 py-1 rounded text-white">NEW</button>
+        <button
+          onClick={handleNewEntry}
+          className="bg-violet-500 px-5 py-1 rounded text-white">
+          NEW
+        </button>
       </div>
 
       {/* row - Entries Body */}
@@ -24,7 +35,10 @@ export function Entries() {
 
           {/* column-half - details */}
           <div className="w-1/2 flex flex-col pl-5 pt-5 space-y-5">
-            <h2 className="text-3xl flex justify-between">Placeholder<FaPencil className='cursor-pointer'/></h2>
+            <h2 className="text-3xl flex justify-between">
+              Placeholder
+              <FaPencil className="cursor-pointer" />
+            </h2>
             <p className="text-base">Description</p>
           </div>
         </div>
