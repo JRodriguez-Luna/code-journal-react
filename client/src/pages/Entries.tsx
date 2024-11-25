@@ -1,11 +1,14 @@
 import { FaPencil } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { data } from '../lib/data';
+import { useState } from 'react';
 
 export function Entries() {
   const navigate = useNavigate();
+  const [entries, setEntries] = useState(data.entries);
 
   const handleNewEntry = () => {
-    navigate('/new-entry');
+    navigate('/');
   };
 
   return (
@@ -23,25 +26,29 @@ export function Entries() {
       {/* row - Entries Body */}
       <div className="w-full h-auto flex flex-wrap pb-3">
         {/* column -  Photo and Pencil */}
-        <div className="w-full flex pb-5">
-          {/* column-half - Image */}
-          <div className="w-1/2">
-            <img
-              src="/placeholder-image-square.jpg"
-              alt="placeholder"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {
+            entries.map((entry) => (
+              <div className='w-full flex pb-5'>
+                {/* Image */}
+                <div className="w-1/2">
+                  <img
+                    src={entry.photoUrl}
+                    alt={entry.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-          {/* column-half - details */}
-          <div className="w-1/2 flex flex-col pl-5 pt-5 space-y-5">
-            <h2 className="text-3xl flex justify-between">
-              Placeholder
-              <FaPencil className="cursor-pointer" />
-            </h2>
-            <p className="text-base">Description</p>
-          </div>
-        </div>
+                {/* Details */}
+                <div className="w-1/2 flex flex-col pl-5 pt-5 space-y-5">
+                  <h2 className="text-3xl flex justify-between">
+                    {entry.title}
+                    <FaPencil className="cursor-pointer" />
+                  </h2>
+                  <p className="text-base">{entry.notes}</p>
+                </div>
+              </ div>
+            ))
+          }
       </div>
     </div>
   );

@@ -1,27 +1,35 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
+import { data, writeData } from '../lib/data';
+import { Link } from 'react-router-dom';
 
-type Entry = {
-  onSave: (entry: { title: string; photoURL: string; notes: string }) => void;
-};
+export interface Entry {
+  entryId: number;
+  title: string;
+  photoUrl: string;
+  notes: string;
+}
 
-export function CodeJournal({ onSave }: Entry) {
+export function CodeJournal() {
   const [photoURL, setPhotoURL] = useState('');
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
-  const imgRef = useRef<HTMLImageElement>(null);
 
   const handleSave = () => {
-    onSave({ title, photoURL, notes });
+    const entry: Entry = {
+      entryId: data.nextEntryId,
+      title: title,
+      photoUrl: photoURL,
+      notes: notes,
+    }
+
+    data.entries.push(entry);
+    data.nextEntryId++;
+    writeData();
+
     setTitle('');
     setPhotoURL('');
     setNotes('');
   };
-
-  useEffect(() => {
-    if (imgRef.current) {
-      imgRef.current.src = photoURL;
-    }
-  }, [photoURL, imgRef.current]);
 
   return (
     <main className="w-full p-5 px-72">
@@ -51,7 +59,7 @@ export function CodeJournal({ onSave }: Entry) {
             className="border p-1"
             required
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.currentTarget.value)}
           />
           <label htmlFor="photo-url">Photo URL</label>
           <input
@@ -61,7 +69,7 @@ export function CodeJournal({ onSave }: Entry) {
             className="border p-1"
             required
             value={photoURL}
-            onChange={(e) => setPhotoURL(e.target.value)}
+            onChange={(e) => setPhotoURL(e.currentTarget.value)}
           />
         </div>
       </div>
@@ -75,15 +83,17 @@ export function CodeJournal({ onSave }: Entry) {
           className="w-full h-24 p-1 border"
           required
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}></textarea>
+          onChange={(e) => setNotes(e.currentTarget.value)}></textarea>
       </div>
 
-      <div
-        className="w-full flex flex-row-reverse justify-between"
-        onClick={handleSave}>
-        <button className="bg-violet-500 px-5 py-1 rounded text-white">
-          SAVE
-        </button>
+      <div className="w-full flex flex-row-reverse justify-between">
+        <Link to='/entries'>
+          <button
+            onClick={handleSave}
+            className="bg-violet-500 px-5 py-1 rounded text-white">
+            SAVE
+          </button>
+        </Link>
         {/* Delete Button Hidden until user clicks Pencil for edit. */}
         <button className="text-red-600 hidden">Delete Entry</button>
       </div>
