@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { data, writeData } from '../lib/data';
+import { Modal } from './Modal';
 import { Link } from 'react-router-dom';
 
 export interface Entry {
@@ -13,14 +14,25 @@ export function CodeJournal() {
   const [photoURL, setPhotoURL] = useState('');
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  function cancelModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function confirmDeleteClick() {}
 
   const handleSave = () => {
     const entry: Entry = {
       entryId: data.nextEntryId,
-      title: title,
+      title,
       photoUrl: photoURL,
-      notes: notes,
-    }
+      notes,
+    };
 
     data.entries.push(entry);
     data.nextEntryId++;
@@ -87,7 +99,7 @@ export function CodeJournal() {
       </div>
 
       <div className="w-full flex flex-row-reverse justify-between">
-        <Link to='/entries'>
+        <Link to="/entries">
           <button
             onClick={handleSave}
             className="bg-violet-500 px-5 py-1 rounded text-white">
@@ -95,7 +107,24 @@ export function CodeJournal() {
           </button>
         </Link>
         {/* Delete Button Hidden until user clicks Pencil for edit. */}
-        <button className="text-red-600 hidden">Delete Entry</button>
+        <button className="text-red-600 " onClick={openModal}>
+          Delete Entry
+        </button>
+        <Modal isOpen={isOpen} onClose={cancelModal}>
+          <p>
+            <strong>Are you sure you want to delete?</strong>
+          </p>
+          <button
+            className="items-center font-bold p-2 bg-gray-300 rounded"
+            onClick={cancelModal}>
+            Cancel
+          </button>
+          <button
+            className="items-center text-white p-2 rounded bg-red-500"
+            onClick={confirmDeleteClick}>
+            Delete
+          </button>
+        </Modal>
       </div>
     </main>
   );
