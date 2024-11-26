@@ -15,5 +15,9 @@ export function Modal({ isOpen, children, onClose }: Props) {
     }
   }, [isOpen]);
 
-  return <dialog onClose={onClose}>{children}</dialog>;
+  return (
+    <dialog className="w-1/10 h-1/10 border p-5" onClose={onClose} ref={modal}>
+      {children}
+    </dialog>
+  );
 }
