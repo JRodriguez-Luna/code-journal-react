@@ -1,7 +1,7 @@
-import { FaPencil } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import { data } from '../lib/data';
 import { useState } from 'react';
+import { EditEntry } from './EditEntry';
 
 export function Entries() {
   const navigate = useNavigate();
@@ -11,11 +11,12 @@ export function Entries() {
     navigate('/');
   };
 
+
   return (
     <div className="w-full p-5 px-72">
       {/* Entry title and NEW Button */}
       <div className="pb-5 flex justify-between">
-        <h1 className="text-2xl font-semibold">Entry</h1>
+        <h1 className="text-2xl font-semibold">Entries</h1>
         <button
           onClick={handleNewEntry}
           className="bg-violet-500 px-5 py-1 rounded text-white">
@@ -42,7 +43,7 @@ export function Entries() {
                 <div className="w-1/2 flex flex-col pl-5 pt-5 space-y-5">
                   <h2 className="text-3xl flex justify-between">
                     {entry.title}
-                    <FaPencil className="cursor-pointer" />
+                  <EditEntry entryId={entry.entryId} />
                   </h2>
                   <p className="text-base">{entry.notes}</p>
                 </div>

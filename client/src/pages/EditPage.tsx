@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 import { data, writeData } from '../lib/data';
-import { Link } from 'react-router-dom';
+import { Modal } from './Modal';
+import { Link, useLocation } from 'react-router-dom';
 
 export interface Entry {
   entryId: number;
@@ -9,33 +10,58 @@ export interface Entry {
   notes: string;
 }
 
-export function CodeJournal() {
+export function EditPage() {
+const location = useLocation();
+const entry = location.state.entry;
+
   const [photoURL, setPhotoURL] = useState('');
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setPhotoURL(entry.photoUrl);
+    setTitle(entry.title);
+    setNotes(entry.notes);
+  }, [entry]);
+
+   function cancelModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function confirmDeleteClick() {}
 
 
-  const handleSave = () => {
-    const entry: Entry = {
-      entryId: data.nextEntryId,
+   const handleSave = () => {
+    const editedEntry: Entry = {
+      entryId: entry.entryId,
       title,
       photoUrl: photoURL,
       notes,
     };
 
-    data.entries.push(entry);
-    data.nextEntryId++;
-    writeData();
+    const entryIndex = data.entries.findIndex((e) => e.entryId === entry.entryId);
+
+    if (entryIndex !== -1) {
+      data.entries[entryIndex] = editedEntry;
+      writeData();
+    }
+
+
 
     setTitle('');
     setPhotoURL('');
     setNotes('');
   };
 
-  return (
+return (
     <main className="w-full p-5 px-72">
       <div className="text-2xl pb-5 font-semibold">
-        <h2>New Entry</h2>
+        <h2>Edit Entry</h2>
       </div>
 
       {/* Body Main */}
@@ -96,6 +122,24 @@ export function CodeJournal() {
           </button>
         </Link>
         {/* Delete Button Hidden until user clicks Pencil for edit. */}
+        <button className="text-red-600 " onClick={openModal}>
+          Delete Entry
+        </button>
+        <Modal isOpen={isOpen} onClose={cancelModal}>
+          <p>
+            <strong>Are you sure you want to delete?</strong>
+          </p>
+          <button
+            className="items-center font-bold p-2 bg-gray-300 rounded"
+            onClick={cancelModal}>
+            Cancel
+          </button>
+          <button
+            className="items-center text-white p-2 rounded bg-red-500"
+            onClick={confirmDeleteClick}>
+            Delete
+          </button>
+        </Modal>
       </div>
     </main>
   );
